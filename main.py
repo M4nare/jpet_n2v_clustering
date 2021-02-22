@@ -90,7 +90,7 @@ kmeans = KMeans(n_clusters=K, random_state=0).fit(model1.wv.vectors)
 
 #hier
 #ag = AgglomerativeClustering(n_clusters=4)
-#aoc = ag.fit_predict(model1.wv.vectors)
+#aoc = ag.fit(model1.wv.vectors)
 
 #EM
 #gmm = GaussianMixture(n_components=4, random_state=0).fit(model1.wv.vectors)
