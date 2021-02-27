@@ -39,7 +39,7 @@ edge_labels=dict([((u,v,),d['weight'])
                  for u,v,d in G.edges(data=True)])
 edge_colors = ['black']
 
-pos = nx.spectral_layout(G)
+pos = nx.spring_layout(G,k=0.15,iterations=20)
 
 nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)
 
