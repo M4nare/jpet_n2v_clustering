@@ -6,22 +6,16 @@
 
 import pandas as pd
 
-jpet = pd.read_excel('no_abstract/no_abstract.xlsx',index_col=0)
+jpet = pd.read_csv('weight.csv',index_col=0)
 
 
 # In[2]:
 
 
-jpet = jpet.fillna(0)
-
-
-# In[3]:
-
-
 jpet
 
 
-# In[4]:
+# In[3]:
 
 
 import networkx as nx
@@ -43,14 +37,14 @@ pos = nx.spring_layout(G,k=0.15,iterations=20)
 
 nx.draw_networkx_edge_labels(G,pos,edge_labels=edge_labels)
 
-nx.draw(G, pos, node_size=1500, edge_color=edge_colors, with_labels=True, arrows=True)
+nx.draw(G, pos, node_size=3000, edge_color=edge_colors, with_labels=True, arrows=True)
 
 fig.set_size_inches(20, 20)
-#plt.savefig("jpet_networkx_table")
+plt.savefig("jpet_networkx_table")
 plt.show()
 
 
-# In[9]:
+# In[8]:
 
 
 from node2vec import Node2Vec
@@ -68,24 +62,25 @@ from sklearn.cluster import AgglomerativeClustering
 G=nx.from_pandas_adjacency(jpet, create_using = nx.karate_club_graph())
 G = nx.relabel_nodes(G, { n:str(n) for n in G.nodes()})
 
-# https://github.com/eliorc/node2vec
+
 
 node2vec = Node2Vec(graph=G, # target graph
                     dimensions=50, # embedding dimension
                     walk_length=10, # number of nodes in each walks 
                     p = 1, # return hyper parameter
-                    q = 0.0001, # inout parameter 
+                    q = 0.0001, # inout parameter
                     num_walks=2000, 
                     workers=4,
                    )
+
 for i, each_walk in enumerate(node2vec.walks):
     print(f"{i:0>2d}, {each_walk}")
-    if i>1:
+    if i>2:
         break
-#
+
 model1 = node2vec.fit(window=2)
 # kmeans clustering
-K = 4
+K = 3
 kmeans = KMeans(n_clusters=K, random_state=0).fit(model1.wv.vectors)
 
 #hier
@@ -111,7 +106,16 @@ plt.show()
 
 
 
+# In[5]:
 
 
+import numpy as np
 
+
+# In[6]:
+
+
+result_data = np.array([n for n in G.nodes(data=True)])
+df_result = pd.DataFrame(result_data)
+df_result.to_csv('kmeans.csv', index=False)
 
